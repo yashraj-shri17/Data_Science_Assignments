@@ -30,7 +30,31 @@ GROUP BY sport,name
 ORDER BY sport,Total_Medals DESC
 LIMIT 3;-- K. Find the top 3 athletes by the total number of medals won in each sport.
 
+SELECT name, Year, COUNT(*) AS Total_Medals
+FROM Olympics
+GROUP BY name, Year
+HAVING Total_Medals > 1;-- L. List athletes who won more than one medal in a single Olympic year.
 
+SELECT team
+FROM Olympics
+WHERE Season IN ('Summer', 'Winter')
+GROUP BY team
+HAVING COUNT(DISTINCT Season) = 2 AND SUM(CASE WHEN Medal = 'Gold' THEN 1 ELSE 0 END) > 0;-- M. Identify countries that have won gold medals in both Summer and Winter Olympics.
+
+SELECT team, MAX(Year) - MIN(Year) AS Year_Difference
+FROM Olympics
+GROUP BY team;-- N. Show the year difference between the first and last medal won by each country.
+
+ SELECT team, AVG(Total_Medals) AS Average_Medals_Per_Athlete
+FROM (SELECT team, name, COUNT(*) AS Total_Medals
+      FROM Olympics
+      GROUP BY team, name) AS Athlete_Medals
+GROUP BY team;-- O. Calculate the average number of medals won per athlete for each country.
+
+SELECT name, Event
+FROM Olympics
+WHERE Event IN (SELECT Event FROM Olympics WHERE Medal = 'Silver')
+  AND Medal = 'Gold';-- P. Identify athletes who have won a silver medal and then later won a gold in the same event.
 
 
 
